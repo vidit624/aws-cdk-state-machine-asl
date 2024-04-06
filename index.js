@@ -12,7 +12,12 @@ const parse = (path) => {
 
 const writeAsl = (stateMachineResource, key) => {
     const definition = stateMachineResource.Properties.DefinitionString;
-    const asl = fnJoin(definition["Fn::Join"])
+    const nestedDefinitionString = definition["Fn::Join"];
+    if (!nestedDefinitionString) {
+      console.log("In definition string format, skipping asl generation...")
+      return;
+    }
+    const asl = fnJoin(nestedDefinitionString)
     fs.writeFileSync(`asl-${key}.json`, asl);
 }
 
